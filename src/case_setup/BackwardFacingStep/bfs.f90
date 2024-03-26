@@ -157,7 +157,7 @@ program bfs
     end if
     call set_field_type(variable_types(i), field_properties)
     call set_field_name(trim(variable_names(i)), field_properties)
-    call create_field(field_properties, flow_fields)
+    call create_field(par_env, field_properties, flow_fields)
   end do
 
   if (is_root(par_env)) then
@@ -165,18 +165,18 @@ program bfs
   end if
 
   ! Expect u, w, p, p_prime to be created dynamically
-  call create_field(field_properties, flow_fields)
+  call set_field_type(cell_centred_central, field_properties)
   call set_field_name("viscosity", field_properties)
-  call create_field(field_properties, flow_fields)
+  call create_field(par_env, field_properties, flow_fields)
   call set_field_name("density", field_properties)
-  call create_field(field_properties, flow_fields)
+  call create_field(par_env, field_properties, flow_fields)
 
   call set_vector_location(face, vec_properties)
   call set_size(par_env, mesh, vec_properties)
   call set_field_vector_properties(vec_properties, field_properties)
   call set_field_type(face_centred, field_properties)
   call set_field_name("mf", field_properties)
-  call create_field(field_properties, flow_fields)
+  call create_field(par_env, field_properties, flow_fields)
 
   ! Read and set BC profiles
   ! Read u componemt (1st column)

@@ -133,10 +133,10 @@ program scalar_transport
   call set_field_vector_properties(vec_properties, field_properties)
   call set_field_type(cell_centred_central, field_properties)
   call set_field_name("viscosity", field_properties)
-  call create_field(field_properties, flow_fields) 
+  call create_field(par_env, field_properties, flow_fields) 
   call set_field_type(cell_centred_central, field_properties)
   call set_field_name("density", field_properties)
-  call create_field(field_properties, flow_fields) 
+  call create_field(par_env, field_properties, flow_fields) 
 
   if (is_root(par_env)) then
     print *, "Build field list"
@@ -147,7 +147,7 @@ program scalar_transport
     end if
     call set_field_type(variable_types(i), field_properties)
     call set_field_name(variable_names(i), field_properties)
-    call create_field(field_properties, flow_fields)
+    call create_field(par_env, field_properties, flow_fields)
   end do
   if (is_root(par_env)) then
     print *, "Built ", size(variable_names), " dynamically-defined fields"
@@ -159,7 +159,7 @@ program scalar_transport
   call set_field_vector_properties(vec_properties, field_properties)
   call set_field_type(face_centred, field_properties)
   call set_field_name("mf", field_properties)
-  call create_field(field_properties, flow_fields)
+  call create_field(par_env, field_properties, flow_fields)
 
   do i = 1, size(flow_fields%fields)
     call get_field(flow_fields, i, phi)

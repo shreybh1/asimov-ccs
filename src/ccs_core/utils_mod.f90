@@ -21,7 +21,7 @@ module utils
   use solver, only: initialise_equation_system
   use kinds, only: ccs_int, ccs_real
   use types, only: field, fluid, field_ptr
-  use constants, only: cell_centred_central, cell_centred_upwind
+  use constants, only: cell_centred_central, cell_centred_upwind, face_centred
   use error_codes
 
   implicit none
@@ -558,6 +558,8 @@ contains
        id = cell_centred_central
     else if (scheme == "upwind") then
        id = cell_centred_upwind
+     else if (scheme == "face") then
+       id = face_centred
     else
       error stop unknown_scheme ! Unknown discretisation scheme
     end if
@@ -575,6 +577,8 @@ contains
        scheme_name = "central"
     else if (scheme_id == cell_centred_upwind) then
        scheme_name = "upwind"
+     else if (scheme_id == face_centred) then
+       scheme_name = "face"
     else
       error stop unknown_scheme ! Unknown discretisation scheme ID
     end if
