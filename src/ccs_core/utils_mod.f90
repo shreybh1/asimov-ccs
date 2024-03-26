@@ -21,7 +21,8 @@ module utils
   use solver, only: initialise_equation_system
   use kinds, only: ccs_int, ccs_real
   use types, only: field, fluid, field_ptr
-  use constants, only: cell_centred_central, cell_centred_upwind, face_centred
+  use constants, only: cell_centred_central, cell_centred_upwind, face_centred, cell_centred_gamma, &
+                       cell_centred_linear_upwind
   use error_codes
 
   implicit none
@@ -555,11 +556,15 @@ contains
 
     scheme = trim(scheme_name)
     if (scheme == "central") then
-       id = cell_centred_central
+      id = cell_centred_central
     else if (scheme == "upwind") then
-       id = cell_centred_upwind
-     else if (scheme == "face") then
-       id = face_centred
+      id = cell_centred_upwind
+    else if (scheme == "face") then
+      id = face_centred
+    else if (scheme == "gamma") then
+      id = cell_centred_gamma
+    else if (scheme == "luds") then
+      id = cell_centred_linear_upwind
     else
       error stop unknown_scheme ! Unknown discretisation scheme
     end if
@@ -574,11 +579,15 @@ contains
     character(len=:), allocatable :: scheme_name
 
     if (scheme_id == cell_centred_central) then
-       scheme_name = "central"
+      scheme_name = "central"
     else if (scheme_id == cell_centred_upwind) then
-       scheme_name = "upwind"
-     else if (scheme_id == face_centred) then
-       scheme_name = "face"
+      scheme_name = "upwind"
+    else if (scheme_id == face_centred) then
+      scheme_name = "face"
+    else if (scheme_id == cell_centred_gamma) then
+      scheme_name = "gamma"
+    else if (scheme_id == cell_centred_linear_upwind) then
+      scheme_name = "luds"
     else
       error stop unknown_scheme ! Unknown discretisation scheme ID
     end if

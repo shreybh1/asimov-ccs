@@ -14,8 +14,7 @@ program ldc
                          write_gradients, velocity_solver_method_name, velocity_solver_precon_name, &
                          pressure_solver_method_name, pressure_solver_precon_name
   use constants, only: cell, face, ccsconfig, ccs_string_len, &
-                       cell_centred_central, cell_centred_upwind, cell_centred_gamma, cell_centred_linear_upwind, &
-                       face_centred, &
+                       cell_centred_central, cell_centred_upwind, face_centred, &
                        ccs_split_type_shared, ccs_split_type_low_high
   use kinds, only: ccs_real, ccs_int
   use types, only: field, field_spec, upwind_field, central_field, gamma_field, face_field, ccs_mesh, &
