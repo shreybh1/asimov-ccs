@@ -5,12 +5,14 @@
 module fields
 #include "ccs_macros.inc"
 
+  use parallel_types, only: parallel_environment
   use constants, only: cell_centred_central, cell_centred_upwind, cell_centred_gamma, cell_centred_linear_upwind, face_centred
   use types, only: field, field_spec, field_ptr, fluid, &
                    vector_spec, face_field, central_field, upwind_field, gamma_field, linear_upwind_field
   use kinds, only: ccs_int
 
-  use utils, only: update, add_field
+  use utils, only: update, add_field, get_scheme_name
+  use parallel, only: is_root
   use boundary_conditions, only: read_bc_config, allocate_bc_arrays
   use vec, only: create_vector, get_vector_data_readonly
   use fv, only: update_gradient
@@ -32,16 +34,19 @@ module fields
 contains
 
   !> Build a field variable with data and gradient vectors + transient data and boundary arrays.
-  subroutine create_field(field_properties, flow)
+  subroutine create_field(par_env, field_properties, flow)
 
     use utils, only: debug_print
 
     implicit none
 
+    class(parallel_environment), intent(in) :: par_env
     type(field_spec), intent(in) :: field_properties !< Field descriptor
     type(fluid), intent(inout) :: flow !< The flow field container where new field is to be constructed
 
     integer :: nfields
+    
+    call print_field(par_env, field_properties)
     
     associate (ccs_config_file => field_properties%ccs_config_file, &
                vec_properties => field_properties%vec_properties, &
@@ -83,6 +88,24 @@ contains
 
   end subroutine create_field
 
+  !> Print a brief description (name, type) of a field as it is created
+  subroutine print_field(par_env, field_properties)
+
+    class(parallel_environment), intent(in) :: par_env
+    type(field_spec), intent(in) :: field_properties
+
+    character(len=:), allocatable :: field_name
+    integer(ccs_int) :: field_type
+
+    field_name = field_properties%field_name
+    field_type = field_properties%field_type
+    
+    if (is_root(par_env)) then
+      print *, "Create field: ", trim(field_name), " ("//get_scheme_name(field_type)//")"
+    end if
+    
+  end subroutine print_field
+  
   !> Allocate a field variable
   subroutine allocate_field(vec_properties, field_type, n_boundaries, store_residuals, flow)
 
