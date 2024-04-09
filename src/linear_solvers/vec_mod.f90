@@ -35,6 +35,7 @@ module vec
   public :: mult_vec_vec
   public :: scale_vec
   public :: get_natural_data_vec
+  public :: reorder_data_vec
 
   interface
 
@@ -207,6 +208,13 @@ module vec
       !< de/reallocated by this subroutine.
     end subroutine get_natural_data_vec
 
+    module subroutine reorder_data_vec(par_env, data_from, idx_to, data_to)
+      class(parallel_environment), intent(in) :: par_env
+      real(ccs_real), dimension(:), intent(in) :: data_from
+      integer(ccs_int), dimension(:), intent(in) :: idx_to
+      real(ccs_real), dimension(:), intent(out) :: data_to
+    end subroutine reorder_data_vec
+    
   end interface
 
 end module vec
