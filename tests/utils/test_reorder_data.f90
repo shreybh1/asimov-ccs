@@ -21,10 +21,6 @@ program test_reorder_data
   integer :: i
   
   call init()
-
-  if(par_env%num_procs /= 4) then
-    call stop_test("This test only runs on 4 processors")
-  end if
   
   proc_id = par_env%proc_id
   if(proc_id == 0) then
@@ -39,10 +35,12 @@ program test_reorder_data
     nlocal = 3
     istart = 6
     to = [ 3, 10 ]
-  else ! Proc ID 3
+  else if (proc_id == 3) then
     nlocal = 2
     istart = 9
     to = [ 4, 6, 9 ]
+  else
+    call stop_test("This test only runs on 4 processors")
   end if
   allocate(data(nlocal))
   data(:) = 0
