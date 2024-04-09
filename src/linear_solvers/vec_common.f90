@@ -78,18 +78,23 @@ contains
     type(ccs_mesh), intent(in) :: mesh
     class(ccs_vector), intent(inout) :: v
     real(ccs_real), dimension(:), allocatable, intent(out) :: data !< The returned vector data in
-    !< natural ordering. Note the use
-    !< of allocatable + intent(out),
-    !< this ensures it will be
-    !< de/reallocated by this subroutine.
+                                                                   !< natural ordering. Note the use
+                                                                   !< of allocatable + intent(out),
+                                                                   !< this ensures it will be
+                                                                   !< de/reallocated by this subroutine.
 
     real(ccs_real), dimension(:), pointer :: vec_data ! The data stored in the vector
 
     associate (topo => mesh%topo, &
                local_num_cells => mesh%topo%local_num_cells)
 
+      if (allocated(data)) then ! Shouldn't really happen...
+        deallocate(data)
+      end if
+      allocate(data(local_num_cells))
+      
       call get_vector_data(v, vec_data)
-      call reorder_data_vec(par_env, vec_data, topo%natural_indices(1:local_num_cells), &
+      call reorder_data_vec(par_env, vec_data(1:local_num_cells), topo%natural_indices(1:local_num_cells), &
                             data(1:local_num_cells))
       call restore_vector_data(v, vec_data)
 
