@@ -14,15 +14,15 @@ source /work/e609/e609/shared/ccs/gnu/setup_gnu.sh
 
 # set up config and exe  
 export EXE=../../../ccs_app
-export CONFIG=$(SLURM_SUBMIT_DIR)/LidDrivenCavity_adios2_config.xml
+export CONFIG=${SLURM_SUBMIT_DIR}/LidDrivenCavity_adios2_config.xml
 
 # set striping and create directory 
 export STRIPE_COUNT=-1 # max striping 
-rm -rf ${RUNDIR}
-mkdir -p ${RUNDIR}
-lfs setstripe -c ${STRIPE_COUNT}  ${WORKING_DIR}
-cd ${WORKING_DIR} 
-cp ${CONFIG} . 
+#rm -rf ${RUNDIR}
+#mkdir -p ${RUNDIR}
+#lfs setstripe -c ${STRIPE_COUNT}  ${WORKING_DIR}
+#cd ${WORKING_DIR} 
+#cp ${CONFIG} . 
 
 if (( ${DARSHAN} == 1 )); 
 then 
