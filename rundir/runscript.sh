@@ -1,3 +1,5 @@
+# set -e
+
 submitSlurm() {
   export DARSHAN=${DARSHAN}
   export MESH=${MESH} 
