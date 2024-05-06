@@ -6,7 +6,7 @@
 #SBATCH --time=00:05:00
 #SBATCH --account=e609
 #SBATCH --partition=standard 
-#SBATCH --qos=standard 
+#SBATCH --qos=lowpriority
 
 echo "Job started " $(date +"%T") "size " ${SIZE} MiB # start time
 
@@ -18,9 +18,10 @@ source /work/e609/e609/shared/ccs/gnu/setup_gnu.sh
 # set up config and exe  
 export CCS_DIR=$(cd ../ && pwd)
 export EXE=${CCS_DIR}/ccs_app
-export CONFIG_DIR=${CCS_DIR}/src/case_setup/LidDrivenCavity
+export CONFIG_DIR=${CCS_DIR}/src/case_setup/${CCS_CASE} 
 
 # set striping and create directory 
+export RUNDIR=${OUTPUT_DIR}/${CCS_CASE}/${MESH}/${SLURM_NNODES}_${SLURM_NTASKS_PER_NODE}
 echo Running in directory: ${RUNDIR} 
 export STRIPE_COUNT=-1 # max striping 
 rm -rf ${RUNDIR}
@@ -34,7 +35,7 @@ then
   module load darshan
 fi 
 
-srun  --hint=nomultithread  --distribution=block:block ${EXE} --ccs_m ${MESH} --ccs_case LidDrivenCavity --ccs_in ${CONFIG_DIR}  > ccs.out 
+srun  --hint=nomultithread  --distribution=block:block ${EXE} --ccs_m ${MESH} --ccs_case ${CCS_CASE} LidDrivenCavity --ccs_in ${CONFIG_DIR}  > ccs.out 
 
 if (( ${DARSHAN} == 1 )); 
 then 
