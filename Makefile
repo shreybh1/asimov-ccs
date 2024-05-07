@@ -84,7 +84,8 @@ INC += -I${RCMF90}/include
 LIB += -L${RCMF90}/lib -lrcm
 
 INC += -I${FYAMLC}/modules 
-LIB += -Wl,-rpath,${FYAMLC}/lib -L${FYAMLC}/lib -lfortran-yaml-c
+LIB += -Wl,-rpath,${FYAMLC}/lib -L${FYAMLC}/lib -lfortran-yaml-c -llibyaml_interface -lyaml
+#LIB += -Wl,-rpath,${FYAMLC}/src -L${FYAMLC}/src -lfortran-yaml-c -llibyaml_interface -lyaml 
 
 ifdef PARHIP
   INC += -I${PARHIP}/include
@@ -92,8 +93,11 @@ ifdef PARHIP
 endif
 
 ifdef PARMETIS
-  INC += -I${PARMETIS}/include
-  LIB += -L${PARMETIS}/lib -lGKlib -lmetis -lparmetis -Wl,-rpath,${PARMETIS}/lib
+  INC += -I${PARMETIS}/include -I${METIS}/include -I${GKLIB_DIR}/include 
+  LIB += -L${GKLIB_DIR}/lib -lGKlib 
+  LIB += -L${METIS}/lib -lmetis 
+  # LIB += -L${PARMETIS}/lib -lGKlib -lmetis -lparmetis -Wl,-rpath,${PARMETIS}/lib
+  LIB += -L${PARMETIS}/lib -lparmetis -Wl,-rpath,${PARMETIS}/lib
 endif
 
 ifeq ($(NEED_CMP),yes)
